@@ -1,0 +1,74 @@
+def check(num):
+    tmp = str(num)
+    digits = []
+    for i in range(len(tmp)):
+        if tmp[i] not in digits:
+            digits.append(tmp[i])
+            if len(digits) == 3:
+                return i
+    return -1 * len(digits)
+
+
+def solve_n1(num):
+    if check(num) == -1: return num
+    tmp = str(num)
+    new_num = ""
+    for i in range(len(tmp)):
+        new_num += tmp[0]
+    if (int(new_num) >= num): return new_num
+    new_num = ""
+    for i in range(len(tmp)):
+        new_num += chr(ord(tmp[0]) + 1)
+    return new_num
+
+
+def solve_n2(num):
+    tmp = str(num)
+    if num < 10: return 10
+    i = check(num)
+    if i == -1: return num + 1
+    if i == -2: return num
+    tmp1 = int(tmp[0])
+    tmp2 = 0
+    for c in tmp:
+        if int(c) is not tmp1:
+            tmp2 = int(c)
+            break
+    small = min(tmp1, tmp2)
+    big = max(tmp1, tmp2)
+    if int(tmp[i]) < small:
+        new_tmp = tmp[:i]
+        for j in range(len(tmp) - i):
+            new_tmp += str(small)
+        return int(new_tmp)
+    if int(tmp[i]) < big:
+        new_tmp = tmp[:i]
+        new_tmp += str(big)
+        for j in range(len(tmp) - i - 1):
+            new_tmp += str(small)
+        return int(new_tmp)
+    if small + 1 == big:
+        new_tmp = tmp[:i]
+        for j in range(len(tmp) - i):
+            new_tmp += str(0)
+        return int(new_tmp.replace(str(small), str(small + 1)))
+    new_tmp = tmp[:i]
+    for j in range(len(tmp) - i):
+        new_tmp += str(small)
+    if big == int(tmp[0]):
+        return int(new_tmp.replace(str(small), str(small + 1)))
+    if small == int(tmp[0]):
+        for j in range(len(tmp)):
+            if int(tmp[j]) == big:
+                res = new_tmp[:j] + str(big + 1)
+                for k in range(len(tmp) - j - 1): res += str(small)
+                return res
+    return -1
+
+
+def solve(num, n):
+    if n == 1:
+        return solve_n1(num)
+    else:
+        return solve_n2(num)
+    return
